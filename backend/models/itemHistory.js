@@ -12,7 +12,9 @@ const itemHistorySchema = new mongoose.Schema(
       enum: ["good", "bad"],
       required: true,
     },
-    notes: String,
+    note: {
+      type: String
+    },
     date: {
       type: Date,
       default: Date.now,

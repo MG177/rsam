@@ -9,5 +9,6 @@ router.put('/:id', itemController.updateItem);
 router.delete('/:id', itemController.deleteItem);
 router.get('/:id/history', itemController.getItemHistoryByItemId);
 router.post('/:id/history', itemController.createItemHistory);
+router.put('/:id/history', itemController.updateItemHistory);
 
 module.exports = router;

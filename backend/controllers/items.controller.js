@@ -78,16 +78,30 @@ exports.deleteItem = async (req, res) => {
 exports.getItemHistoryByItemId = async (req, res) => {
   try {
     const { id } = req.params;
-    const itemHistory = await ItemHistory.find({ itemId: id }).sort({ date: -1 });
+    const itemHistory = await ItemHistory.find({ item: id }).sort({ date: -1 });
     if (!itemHistory) {
       return res.status(404).json({ message: 'Item history not found' });
     }
-    res.status(200).json(itemHistory);
+    const formattedItemHistory = itemHistory.map((item) => {
+      const formattedDate = new Date(item.date).toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'Asia/Jakarta'
+      });
+      return {
+        ...item._doc,
+        date: formattedDate,
+      };
+    });
+    res.status(200).json(formattedItemHistory);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 exports.createItemHistory = async (req, res) => {
   const { id } = req.params;
@@ -104,5 +118,26 @@ exports.createItemHistory = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: id});
+  }
+};
+
+exports.updateItemHistory = async (req, res) => {
+  const { id } = req.params;
+  const { condition, note } = req.body;
+  try {
+    const updatedItemHistory = await ItemHistory.findOneAndUpdate({ item: id }, { condition, note }, { new: true });
+    if (!updatedItemHistory) {
+      const itemHistory = new ItemHistory({
+        item: id,
+        condition,
+        note
+      });
+      await itemHistory.save();
+      return res.status(404).json({ message: itemHistory });
+    }
+    res.status(200).json(updatedItemHistory);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: itemId });
   }
 };

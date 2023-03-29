@@ -30,9 +30,9 @@ app.get('/', (req, res) => {
 });
 
 
+app.use('/api/locations', locationRouter);
 app.use('/api/items', itemRouter);
 app.use('/api/itemHistory', itemHistoryRouter);
-app.use('/api/locations', locationRouter);
 
 
 // Start the server

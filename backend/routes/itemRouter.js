@@ -7,5 +7,7 @@ router.get('/:id', itemController.getItemById);
 router.get('/', itemController.getAllItems);
 router.put('/:id', itemController.updateItem);
 router.delete('/:id', itemController.deleteItem);
+router.get('/:id/history', itemController.getItemHistoryByItemId);
+router.post('/:id/history', itemController.createItemHistory);
 
 module.exports = router;

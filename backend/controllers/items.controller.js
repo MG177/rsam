@@ -1,6 +1,7 @@
 // itemController.js
 
 const Item = require('../models/item');
+const ItemHistory = require('../models/itemHistory');
 
 exports.createItem = async (req, res) => {
   try {
@@ -71,5 +72,37 @@ exports.deleteItem = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error deleting item' });
+  }
+};
+
+exports.getItemHistoryByItemId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const itemHistory = await ItemHistory.find({ itemId: id }).sort({ date: -1 });
+    if (!itemHistory) {
+      return res.status(404).json({ message: 'Item history not found' });
+    }
+    res.status(200).json(itemHistory);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.createItemHistory = async (req, res) => {
+  const { id } = req.params;
+  const { condition, note } = req.body;
+  // item = id;
+  try {
+    const itemHistory = new ItemHistory({
+      item: id,
+      condition,
+      note
+    });
+    await itemHistory.save();
+    res.status(201).json(itemHistory);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: id});
   }
 };

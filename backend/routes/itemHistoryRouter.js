@@ -7,5 +7,6 @@ router.post('/', itemHistoryController.createItemHistory);
 router.get('/:id', itemHistoryController.getItemHistoryById);
 router.put('/:id', itemHistoryController.updateItemHistory);
 router.delete('/:id', itemHistoryController.deleteItemHistory);
+router.post('/items/:id/history', itemHistoryController.createItemHistory);
 
 module.exports = router;
